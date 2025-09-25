@@ -1,12 +1,40 @@
 /*
-	sort
-	This problem requires you to implement a sorting algorithm
-	you can use bubble sorting, insertion sorting, heap sorting, etc.
+    sort
+    This problem requires you to implement a sorting algorithm
+    you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T>(array: &mut [T])
+where
+    T: PartialOrd,
+{
+    if array.len() <= 1 {
+        return;
+    }
+
+    let pivot = partition(array);
+    let (left, right) = array.split_at_mut(pivot);
+    sort(left);
+    sort(&mut right[1..]);
+}
+
+fn partition<T>(array: &mut [T]) -> usize
+where
+    T: PartialOrd,
+{
+    let len = array.len();
+    let pivot = len - 1;
+    let mut i = 0;
+
+    for j in 0..len {
+        if array[j] < array[pivot] {
+            array.swap(i, j);
+            i += 1;
+        }
+    }
+
+    array.swap(i, pivot);
+    i
 }
 #[cfg(test)]
 mod tests {
@@ -18,13 +46,13 @@ mod tests {
         sort(&mut vec);
         assert_eq!(vec, vec![19, 37, 46, 57, 64, 73, 75, 91]);
     }
-	#[test]
+    #[test]
     fn test_sort_2() {
         let mut vec = vec![1];
         sort(&mut vec);
         assert_eq!(vec, vec![1]);
     }
-	#[test]
+    #[test]
     fn test_sort_3() {
         let mut vec = vec![99, 88, 77, 66, 55, 44, 33, 22, 11];
         sort(&mut vec);
